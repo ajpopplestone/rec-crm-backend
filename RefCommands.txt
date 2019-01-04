@@ -1,0 +1,5 @@
+npm run start
+
+cd prisma 
+docker-compose up -d 
+prisma deploy 
