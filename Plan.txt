@@ -1,0 +1,22 @@
+Setup frontend: 
+create react app - done
+mobx
+apollo
+
+node js server:
+add extra types
+add auth for cands + companies
+
+required queries:
+fetch all candidates - auth user - done
+fetch all clients - auth user - done
+mutate x3 cand - auth user 
+mutate x3 client - auth user
+
+fetch all bookings in date range - auth user
+ftehc all cands bookings - auth cand
+fetch all client bookings - auth client
+
+
+Connect Code Tables in datamodel
+setup cand fetch data to refetch

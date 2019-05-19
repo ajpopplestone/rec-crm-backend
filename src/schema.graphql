@@ -1,8 +1,18 @@
-# import UserOrderByInput from './generated/prisma.graphql'
+# import UserOrderByInput, CandidateOrderByInput, BookingOrderByInput, CompanyOrderByInput from './generated/prisma.graphql'
 
 type Query {
-    users(query: String, first: Int, skip: Int, after: String, orderBy: UserOrderByInput): [User!]!
     me: User!
+    users(query: String, first: Int, skip: Int, after: String, orderBy: UserOrderByInput): [User!]!
+    candidates(query: String, first: Int, skip: Int, after: String, orderBy: CandidateOrderByInput): [Candidate!]!
+    candidate(id: ID!): Candidate!
+    companies(query: String, first: Int, skip: Int, after: String, orderBy: CompanyOrderByInput): [Company!]!
+    company(id: ID!): Company!
+    bookings(candId: String, compId: String, orderBy: BookingOrderByInput): [Booking!]!
+    booking(id: ID!): Booking!
+    candStatuses: [CandStatus!]!
+    candRoles: [CandRole!]!
+    compStatuses: [CandStatus!]!
+    busTypes: [BusType!]!
 }
 
 type Mutation {
@@ -10,6 +20,27 @@ type Mutation {
     deleteUser: User!
     updateUser(data: UpdateUserInput!): User!
     login(data: LoginUserInput!): AuthPayload!
+    createCandidate(data: CreateCandidateInput!): Candidate!
+    updateCandidate(id: ID!, data: UpdateCandidateInput!): Candidate!
+    deleteCandidate(id: ID!): Candidate!
+    createCompany(data: CreateCompanyInput!): Company!
+    updateCompany(id: ID!, data: UpdateCompanyInput): Company!
+    deleteCompany(id: ID!): Company!
+    createBooking(data: CreateBookingInput!): Booking!
+    updateBooking(id: ID!, data: UpdateBookingInput!): Booking!
+    deleteBooking(id: ID!): Booking!
+    createCandStatus(data: CreateCodeInput!): CandStatus!
+    updateCandStatus(id: ID!, data: UpdateCodeInput!): CandStatus!
+    deleteCandStatus(id: ID!): CandStatus!
+    createCandRole(data: CreateCodeInput!): CandRole!
+    updateCandRole(id: ID!, data: UpdateCodeInput!): CandRole!
+    deleteCandRole(id: ID!): CandRole!
+    createCompStatus(data: CreateCodeInput!): CompStatus!
+    updateCompStatus(id: ID!, data: UpdateCodeInput!): CompStatus!
+    deleteCompStatus(id: ID!): CompStatus!
+    createBusType(data: CreateCodeInput!): BusType!
+    updateBusType(id: ID!, data: UpdateCodeInput!): BusType!
+    deleteBusType(id: ID!): BusType!
 }
 
 # type Subscription {
@@ -25,6 +56,8 @@ input CreateUserInput {
     name: String!
     email: String!
     password: String!
+    delPermission: Boolean!
+    officeManager: Boolean!
 }
 
 input LoginUserInput {
@@ -36,15 +69,177 @@ input UpdateUserInput {
     name: String
     email: String
     password: String
+    delPermission: Boolean
+}
+
+input CreateCandidateInput {
+    email: String
+    password: String
+    forename: String!
+    surname: String!
+    status: String
+    phone: String
+    consultant: ID 
+    role: String
+    address: String
+    postcode: String
+}
+
+input UpdateCandidateInput {
+    email: String
+    password: String
+    forename: String
+    surname: String
+    status: String
+    phone: String
+    consultant: ID 
+    role: String
+    address: String
+    postcode: String
+}
+
+input CreateCompanyInput {
+    name: String!
+    email: String
+    password: String
+    status: String
+    website: String
+    phone: String
+    businessType: String
+    address: String
+    postcode: String
+    consultant: String
+}
+
+input UpdateCompanyInput {
+    name: String
+    email: String
+    password: String
+    status: String
+    website: String
+    phone: String
+    businessType: String
+    address: String
+    postcode: String
+    consultant: String
+}
+
+input CreateBookingInput {
+    candidate: String!
+    company: String!
+    date: String!
+    role: String!
+}
+
+input UpdateBookingInput {
+    candidate: String
+    company: String
+    date: String
+    role: String
+}
+
+input CreateCodeInput {
+    shortCode: String!
+    description: String
+}
+
+input UpdateCodeInput {
+    shortCode: String
+    description: String
+}
+
+input DeleteCodeInput {
+    shortCode: String
+    description: String
 }
 
 type User {
     id: ID!
-    name: String!
+    name: String
     email: String
     password: String
-    updatedAt: String!
-    createdAt: String!
+    delPermission: Boolean
+    updatedAt: String
+    createdAt: String
+}
+
+type Candidate {
+    id: ID!
+    email: String
+    password: String
+    forename: String
+    surname: String
+    status: CandStatus
+    phone: String
+    consultant: User 
+    role: CandRole
+    address: String
+    postcode: String
+    bookings: [Booking!]!
+    updatedAt: String
+    updatedBy: User
+    createdAt: String
+    createdBy: User
+}
+
+type Company {
+    id: ID!
+    name: String
+    email: String
+    password: String
+    status: CompStatus
+    website: String
+    phone: String
+    businessType: BusType
+    address: String
+    postcode: String
+    consultant: User
+    bookings: [Booking!]!
+    updatedAt: String
+    updatedBy: User
+    createdAt: String
+    createdBy: User
+}
+
+
+type Booking {
+    id: ID!
+    company: Company!
+    candidate: Candidate!
+    date: String!
+    startTime: Float
+    endTime: Float
+    role: CandRole!
+    payRate: Float
+    chargeRate: Float
+    updatedAt: String
+    updatedBy: User
+    createdAt: String
+    createdBy: User
+}
+
+type CandStatus {
+  id: ID!
+  shortCode: String!
+  description: String
+}
+
+type CandRole {
+  id: ID!
+  shortCode: String!
+  description: String
+}
+
+type CompStatus {
+  id: ID!
+  shortCode: String!
+  description: String
+}
+
+type BusType {
+  id: ID!
+  shortCode: String!
+  description: String
 }
 
 enum MutationType {

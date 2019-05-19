@@ -1,8 +1,90 @@
 type User {
-  id: ID! @unique
-  name: String!
+  id: ID! @unique @id
   email: String! @unique
   password: String!
-  updatedAt: DateTime!
-  createdAt: DateTime!
+  name: String!
+  delPermission: Boolean!
+  officeManager: Boolean!
+  candidates: [Candidate!]! @relation(name: "UserToCandidate", onDelete: SET_NULL)
+  companies: [Company!]! @relation(name: "UserToCompany", onDelete: SET_NULL)
+  updatedAt: DateTime! @updatedAt
+  createdAt: DateTime! @createdAt
+}
+
+type Candidate {
+  id: ID! @unique @id
+  email: String @unique
+  password: String
+  forename: String!
+  surname: String!
+  status: CandStatus @relation(name: "CandStatusToCodeValue", onDelete: SET_NULL)
+  phone: String
+  consultant: User @relation(name: "UserToCandidate", onDelete: SET_NULL)
+  role: CandRole @relation(name: "CandRoleToCodeValue", onDelete: SET_NULL)
+  address: String
+  postcode: String
+  bookings: [Booking!]! @relation(name: "CandidateToBooking", onDelete: CASCADE)
+  updatedAt: DateTime! @updatedAt
+  updatedBy: User @relation(name: "UserCandUpdate", onDelete: SET_NULL)
+  createdAt: DateTime! @createdAt
+  createdBy: User @relation(name: "UserCandCreated", onDelete: SET_NULL)
+}
+
+type Company {
+  id: ID! @unique @id
+  name: String!
+  email: String @unique
+  password: String
+  status: CompStatus! @relation(name: "CompStatusToCodeValue", onDelete: SET_NULL)
+  website: String
+  phone: String
+  businessType: BusType! @relation(name: "BusTypeToCodeValue", onDelete: SET_NULL)
+  address: String
+  postcode: String
+  consultant: User @relation(name: "UserToCompany", onDelete: SET_NULL)
+  bookings: [Booking!]! @relation(name: "CompanyToBooking", onDelete: CASCADE)
+  updatedAt: DateTime! @updatedAt
+  updatedBy: User @relation(name: "UserCompUpdate", onDelete: SET_NULL)
+  createdAt: DateTime! @createdAt
+  createdBy: User @relation(name: "UserCompCreated", onDelete: SET_NULL)
+}
+
+type Booking {
+  id: ID! @unique @id
+  company: Company! @relation(name: "CompanyToBooking", onDelete: SET_NULL)
+  candidate: Candidate! @relation(name: "CandidateToBooking", onDelete: SET_NULL)
+  date: DateTime!
+  role: CandRole! @relation(name: "BookRoleToCodeValue", onDelete: SET_NULL)
+  startTime: Float
+  endTime: Float
+  payRate: Float
+  chargeRate: Float
+  updatedAt: DateTime! @updatedAt
+  updatedBy: User @relation(name: "UserBookUpdate", onDelete: SET_NULL)
+  createdAt: DateTime! @createdAt
+  createdBy: User @relation(name: "UserBookCreated", onDelete: SET_NULL)
+}
+
+type CandStatus {
+  id: ID! @unique @id
+  shortCode: String! @unique
+  description: String!
+}
+
+type CandRole {
+  id: ID! @unique @id
+  shortCode: String! @unique
+  description: String!
+}
+
+type CompStatus {
+  id: ID! @unique @id
+  shortCode: String! @unique
+  description: String!
+}
+
+type BusType {
+  id: ID! @unique @id
+  shortCode: String! @unique
+  description: String!
 }
