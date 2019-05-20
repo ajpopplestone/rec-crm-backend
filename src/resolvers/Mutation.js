@@ -25,7 +25,7 @@ const Mutation = {
         
         const user = await prisma.query.user({ 
             where: {
-                email: args.data.email
+                email: args.data.email.toLowerCase()
             }
         })
         
