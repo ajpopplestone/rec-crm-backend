@@ -1,8 +1,8 @@
-// import { findInterfacesRemovedFromObjectTypes } from 'graphql/utilities/findBreakingChanges';
 import bcrypt from 'bcryptjs'
 import getUserId from '../utils/getUserId'
 import generateToken from '../utils/generateToken'
 import hashPassword from '../utils/hashPassword'
+import moment from 'moment'
 
 const Mutation = {
     async createUser(parent, args, { prisma }, info) { 
@@ -369,7 +369,27 @@ const Mutation = {
     async createBooking(parent, args, { prisma, request }, info) {
         const userId = getUserId(request)
         // console.log('creating booking')
-        // console.log(args)
+        console.log(args)
+
+        // Check date does not have booking
+        const bookingOnDay = await prisma.query.bookings({
+            where: {
+                AND: [
+                    {
+                        date: args.data.date
+                    },
+                    {
+                        candidate: {
+                            id: args.data.candidate
+                        }
+                    }
+                ]
+            }
+        })
+
+        if(bookingOnDay.length === 0){
+            throw new Error('Unable to make booking, day already booked')
+        }
 
         const userDetails = {
             updatedBy: {
@@ -417,12 +437,35 @@ const Mutation = {
     async updateBooking(parent, args, { prisma, request }, info) {
         const userId = getUserId(request)
         const bookingExists = await prisma.exists.Booking({
-            id: args.id
+            id: args.id,
         })
+
+        console.log(args)
 
         if(!bookingExists) {
             throw new Error('Unable to update Booking')
         }
+
+        // Check date does not have booking
+        const bookingOnDay = await prisma.query.bookings({
+            where: {
+                AND: [
+                    {
+                        date: args.data.date
+                    },
+                    {
+                        candidate: {
+                            id: args.data.candidate
+                        }
+                    }
+                ]
+            }
+        })
+
+        if(bookingOnDay.length !== 0 && bookingOnDay[0].id !== args.id){
+            throw new Error('Unable to make booking, day already booked')
+        }
+
 
         const userDetails = {
             updatedBy: {
