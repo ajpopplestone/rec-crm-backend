@@ -387,7 +387,9 @@ const Mutation = {
             }
         })
 
-        if(bookingOnDay.length === 0){
+        console.log(bookingOnDay)
+
+        if(bookingOnDay.length !== 0){
             throw new Error('Unable to make booking, day already booked')
         }
 
@@ -462,8 +464,14 @@ const Mutation = {
             }
         })
 
-        if(bookingOnDay.length !== 0 && bookingOnDay[0].id !== args.id){
-            throw new Error('Unable to make booking, day already booked')
+        console.log(bookingOnDay)
+
+        if(bookingOnDay.length !== 0){
+            console.log(bookingOnDay[0].id)
+            console.log(args.id)
+            if(bookingOnDay[0].id !== args.id){
+                throw new Error('Unable to make booking, day already booked')
+            }
         }
 
 
