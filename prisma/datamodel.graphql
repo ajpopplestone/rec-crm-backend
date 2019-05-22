@@ -5,6 +5,7 @@ type User {
   name: String!
   delPermission: Boolean!
   officeManager: Boolean!
+  lastLogin: DateTime
   candidates: [Candidate!]! @relation(name: "UserToCandidate", onDelete: SET_NULL)
   companies: [Company!]! @relation(name: "UserToCompany", onDelete: SET_NULL)
   updatedAt: DateTime! @updatedAt
@@ -75,6 +76,7 @@ type CandRole {
   id: ID! @unique @id
   shortCode: String! @unique
   description: String!
+  businessType: BusType @relation(name: "CandRoleToBusType", onDelete: SET_NULL)
 }
 
 type CompStatus {
@@ -87,4 +89,5 @@ type BusType {
   id: ID! @unique @id
   shortCode: String! @unique
   description: String!
+  colour: String
 }

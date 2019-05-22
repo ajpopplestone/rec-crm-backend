@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Tue Mar 26 2019 21:14:58 GMT+0000 (GMT Standard Time)
+# timestamp: Wed May 22 2019 23:47:55 GMT+0100 (GMT Summer Time)
 
 type AggregateBooking {
   count: Int!
@@ -41,9 +41,9 @@ type BatchPayload {
 type Booking implements Node {
   id: ID!
   company(where: CompanyWhereInput): Company!
-  candidate(where: CandidateWhereInput): Candidate
+  candidate(where: CandidateWhereInput): Candidate!
   date: DateTime!
-  role(where: CandRoleWhereInput): CandRole
+  role(where: CandRoleWhereInput): CandRole!
   startTime: Float
   endTime: Float
   payRate: Float
@@ -71,8 +71,8 @@ input BookingCreateInput {
   payRate: Float
   chargeRate: Float
   company: CompanyCreateOneWithoutBookingsInput!
-  candidate: CandidateCreateOneWithoutBookingsInput
-  role: CandRoleCreateOneInput
+  candidate: CandidateCreateOneWithoutBookingsInput!
+  role: CandRoleCreateOneInput!
   updatedBy: UserCreateOneInput
   createdBy: UserCreateOneInput
 }
@@ -94,7 +94,7 @@ input BookingCreateWithoutCandidateInput {
   payRate: Float
   chargeRate: Float
   company: CompanyCreateOneWithoutBookingsInput!
-  role: CandRoleCreateOneInput
+  role: CandRoleCreateOneInput!
   updatedBy: UserCreateOneInput
   createdBy: UserCreateOneInput
 }
@@ -105,8 +105,8 @@ input BookingCreateWithoutCompanyInput {
   endTime: Float
   payRate: Float
   chargeRate: Float
-  candidate: CandidateCreateOneWithoutBookingsInput
-  role: CandRoleCreateOneInput
+  candidate: CandidateCreateOneWithoutBookingsInput!
+  role: CandRoleCreateOneInput!
   updatedBy: UserCreateOneInput
   createdBy: UserCreateOneInput
 }
@@ -484,6 +484,7 @@ type BusType implements Node {
   id: ID!
   shortCode: String!
   description: String!
+  colour: String
 }
 
 """A connection to a list of items."""
@@ -499,6 +500,7 @@ type BusTypeConnection {
 input BusTypeCreateInput {
   shortCode: String!
   description: String!
+  colour: String
 }
 
 input BusTypeCreateOneInput {
@@ -522,6 +524,8 @@ enum BusTypeOrderByInput {
   shortCode_DESC
   description_ASC
   description_DESC
+  colour_ASC
+  colour_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -532,6 +536,7 @@ type BusTypePreviousValues {
   id: ID!
   shortCode: String!
   description: String!
+  colour: String
 }
 
 type BusTypeSubscriptionPayload {
@@ -576,11 +581,13 @@ input BusTypeSubscriptionWhereInput {
 input BusTypeUpdateDataInput {
   shortCode: String
   description: String
+  colour: String
 }
 
 input BusTypeUpdateInput {
   shortCode: String
   description: String
+  colour: String
 }
 
 input BusTypeUpdateOneInput {
@@ -725,6 +732,46 @@ input BusTypeWhereInput {
 
   """All values not ending with the given string."""
   description_not_ends_with: String
+  colour: String
+
+  """All values that are not equal to given value."""
+  colour_not: String
+
+  """All values that are contained in given list."""
+  colour_in: [String!]
+
+  """All values that are not contained in given list."""
+  colour_not_in: [String!]
+
+  """All values less than the given value."""
+  colour_lt: String
+
+  """All values less than or equal the given value."""
+  colour_lte: String
+
+  """All values greater than the given value."""
+  colour_gt: String
+
+  """All values greater than or equal the given value."""
+  colour_gte: String
+
+  """All values containing the given string."""
+  colour_contains: String
+
+  """All values not containing the given string."""
+  colour_not_contains: String
+
+  """All values starting with the given string."""
+  colour_starts_with: String
+
+  """All values not starting with the given string."""
+  colour_not_starts_with: String
+
+  """All values ending with the given string."""
+  colour_ends_with: String
+
+  """All values not ending with the given string."""
+  colour_not_ends_with: String
 }
 
 input BusTypeWhereUniqueInput {
@@ -929,7 +976,6 @@ input CandidateUpdateManyWithoutConsultantInput {
 input CandidateUpdateOneWithoutBookingsInput {
   create: CandidateCreateWithoutBookingsInput
   connect: CandidateWhereUniqueInput
-  disconnect: Boolean
   delete: Boolean
   update: CandidateUpdateWithoutBookingsDataInput
   upsert: CandidateUpsertWithoutBookingsInput
@@ -1373,6 +1419,7 @@ type CandRole implements Node {
   id: ID!
   shortCode: String!
   description: String!
+  businessType(where: BusTypeWhereInput): BusType
 }
 
 """A connection to a list of items."""
@@ -1388,6 +1435,7 @@ type CandRoleConnection {
 input CandRoleCreateInput {
   shortCode: String!
   description: String!
+  businessType: BusTypeCreateOneInput
 }
 
 input CandRoleCreateOneInput {
@@ -1465,11 +1513,13 @@ input CandRoleSubscriptionWhereInput {
 input CandRoleUpdateDataInput {
   shortCode: String
   description: String
+  businessType: BusTypeUpdateOneInput
 }
 
 input CandRoleUpdateInput {
   shortCode: String
   description: String
+  businessType: BusTypeUpdateOneInput
 }
 
 input CandRoleUpdateOneInput {
@@ -1615,6 +1665,7 @@ input CandRoleWhereInput {
 
   """All values not ending with the given string."""
   description_not_ends_with: String
+  businessType: BusTypeWhereInput
 }
 
 input CandRoleWhereUniqueInput {
@@ -2900,6 +2951,7 @@ type User implements Node {
   name: String!
   delPermission: Boolean!
   officeManager: Boolean!
+  lastLogin: DateTime
   candidates(where: CandidateWhereInput, orderBy: CandidateOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Candidate!]
   companies(where: CompanyWhereInput, orderBy: CompanyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Company!]
   updatedAt: DateTime!
@@ -2922,6 +2974,7 @@ input UserCreateInput {
   name: String!
   delPermission: Boolean!
   officeManager: Boolean!
+  lastLogin: DateTime
   candidates: CandidateCreateManyWithoutConsultantInput
   companies: CompanyCreateManyWithoutConsultantInput
 }
@@ -2947,6 +3000,7 @@ input UserCreateWithoutCandidatesInput {
   name: String!
   delPermission: Boolean!
   officeManager: Boolean!
+  lastLogin: DateTime
   companies: CompanyCreateManyWithoutConsultantInput
 }
 
@@ -2956,6 +3010,7 @@ input UserCreateWithoutCompaniesInput {
   name: String!
   delPermission: Boolean!
   officeManager: Boolean!
+  lastLogin: DateTime
   candidates: CandidateCreateManyWithoutConsultantInput
 }
 
@@ -2981,6 +3036,8 @@ enum UserOrderByInput {
   delPermission_DESC
   officeManager_ASC
   officeManager_DESC
+  lastLogin_ASC
+  lastLogin_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -2994,6 +3051,7 @@ type UserPreviousValues {
   name: String!
   delPermission: Boolean!
   officeManager: Boolean!
+  lastLogin: DateTime
   updatedAt: DateTime!
   createdAt: DateTime!
 }
@@ -3043,6 +3101,7 @@ input UserUpdateDataInput {
   name: String
   delPermission: Boolean
   officeManager: Boolean
+  lastLogin: DateTime
   candidates: CandidateUpdateManyWithoutConsultantInput
   companies: CompanyUpdateManyWithoutConsultantInput
 }
@@ -3053,6 +3112,7 @@ input UserUpdateInput {
   name: String
   delPermission: Boolean
   officeManager: Boolean
+  lastLogin: DateTime
   candidates: CandidateUpdateManyWithoutConsultantInput
   companies: CompanyUpdateManyWithoutConsultantInput
 }
@@ -3090,6 +3150,7 @@ input UserUpdateWithoutCandidatesDataInput {
   name: String
   delPermission: Boolean
   officeManager: Boolean
+  lastLogin: DateTime
   companies: CompanyUpdateManyWithoutConsultantInput
 }
 
@@ -3099,6 +3160,7 @@ input UserUpdateWithoutCompaniesDataInput {
   name: String
   delPermission: Boolean
   officeManager: Boolean
+  lastLogin: DateTime
   candidates: CandidateUpdateManyWithoutConsultantInput
 }
 
@@ -3294,6 +3356,28 @@ input UserWhereInput {
 
   """All values that are not equal to given value."""
   officeManager_not: Boolean
+  lastLogin: DateTime
+
+  """All values that are not equal to given value."""
+  lastLogin_not: DateTime
+
+  """All values that are contained in given list."""
+  lastLogin_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  lastLogin_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  lastLogin_lt: DateTime
+
+  """All values less than or equal the given value."""
+  lastLogin_lte: DateTime
+
+  """All values greater than the given value."""
+  lastLogin_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  lastLogin_gte: DateTime
   updatedAt: DateTime
 
   """All values that are not equal to given value."""

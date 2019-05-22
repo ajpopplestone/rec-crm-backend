@@ -158,6 +158,7 @@ type User {
     name: String
     email: String
     password: String
+    lastUpdate: String
     delPermission: Boolean
     updatedAt: String
     createdAt: String
@@ -228,6 +229,7 @@ type CandRole {
   id: ID!
   shortCode: String!
   description: String
+  businessType: BusType
 }
 
 type CompStatus {
@@ -240,6 +242,7 @@ type BusType {
   id: ID!
   shortCode: String!
   description: String
+  colour: String
 }
 
 enum MutationType {

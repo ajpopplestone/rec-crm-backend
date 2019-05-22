@@ -42,6 +42,15 @@ const Mutation = {
             throw new Error('Unable to login')
         }
 
+        prisma.mutation.updateUser({
+            where: {
+                id: user.id
+            },
+            data: {
+                lastLogin: moment().format()
+            }
+        }, info)
+
         return {
             user,
             token: generateToken(user.id)
@@ -387,7 +396,7 @@ const Mutation = {
             }
         })
 
-        console.log(bookingOnDay)
+        // console.log(bookingOnDay)
 
         if(bookingOnDay.length !== 0){
             throw new Error('Unable to make booking, day already booked')
@@ -464,11 +473,11 @@ const Mutation = {
             }
         })
 
-        console.log(bookingOnDay)
+        // console.log(bookingOnDay)
 
         if(bookingOnDay.length !== 0){
-            console.log(bookingOnDay[0].id)
-            console.log(args.id)
+            // console.log(bookingOnDay[0].id)
+            // console.log(args.id)
             if(bookingOnDay[0].id !== args.id){
                 throw new Error('Unable to make booking, day already booked')
             }
