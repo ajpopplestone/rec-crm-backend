@@ -14,7 +14,7 @@ type User {
 
 type Candidate {
   id: ID! @unique @id
-  email: String @unique
+  email: String
   password: String
   forename: String!
   surname: String!
@@ -34,7 +34,7 @@ type Candidate {
 type Company {
   id: ID! @unique @id
   name: String!
-  email: String @unique
+  email: String
   password: String
   status: CompStatus! @relation(name: "CompStatusToCodeValue", onDelete: SET_NULL)
   website: String

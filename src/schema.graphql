@@ -38,8 +38,8 @@ type Mutation {
     createCompStatus(data: CreateCodeInput!): CompStatus!
     updateCompStatus(id: ID!, data: UpdateCodeInput!): CompStatus!
     deleteCompStatus(id: ID!): CompStatus!
-    createBusType(data: CreateCodeInput!): BusType!
-    updateBusType(id: ID!, data: UpdateCodeInput!): BusType!
+    createBusType(data: CreateBusTypeInput!): BusType!
+    updateBusType(id: ID!, data: UpdateBusTypeInput!): BusType!
     deleteBusType(id: ID!): BusType!
 }
 
@@ -148,9 +148,30 @@ input UpdateCodeInput {
     description: String
 }
 
-input DeleteCodeInput {
+input CreateBusTypeInput {
     shortCode: String
     description: String
+    colour: String
+}
+
+input UpdateBusTypeInput {
+    shortCode: String
+    description: String
+    colour: String
+}
+
+input CreateCandRoleInput {
+    shortCode: String
+    description: String
+    colour: String
+    businessType: String
+}
+
+input UpdateCandRoleInput {
+    shortCode: String
+    description: String
+    colour: String
+    businessType: String
 }
 
 type User {

@@ -473,7 +473,7 @@ const Mutation = {
             }
         })
 
-        // console.log(bookingOnDay)
+        console.log(bookingOnDay.length)
 
         if(bookingOnDay.length !== 0){
             // console.log(bookingOnDay[0].id)
