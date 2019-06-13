@@ -5,7 +5,18 @@ import hashPassword from '../utils/hashPassword'
 import moment from 'moment'
 
 const Mutation = {
-    async createUser(parent, args, { prisma }, info) { 
+    async createUser(parent, args, { prisma, request }, info) {
+        const userId = getUserId(request)
+        const updatingUser = await prisma.query.user({ 
+            where: {
+                id: userId
+            }
+        })
+
+        if(!updatingUser.officeManager){
+            throw new Error('Cannot create User')
+        }
+        
         const password = await hashPassword(args.data.password)
 
         const user = await prisma.mutation.createUser({ 

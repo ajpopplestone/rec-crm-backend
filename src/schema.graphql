@@ -179,7 +179,7 @@ type User {
     name: String
     email: String
     password: String
-    lastUpdate: String
+    lastLogin: String
     delPermission: Boolean
     updatedAt: String
     createdAt: String
