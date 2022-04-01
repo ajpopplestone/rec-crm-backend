@@ -5,7 +5,7 @@ const opts = {
     port: process.env.PORT || 4000,
     cors: {
       credentials: true,
-      origin: ["https://rec-crm-app.herokuapp.com", "http://localhost:3000"] // your frontend url.
+      origin: ["https://rec-crm-app.herokuapp.com", "http://rec-crm-app.herokuapp.com", "http://localhost:3000"] // your frontend url.
     }
 }
 
